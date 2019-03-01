@@ -12,11 +12,11 @@ class Principal
 	}
 
 	public function inserirPrincipal($nome, $sexo, $est_civil, $dt_nasc, $cpf, $rg, $endereco, $bairro, $zona, $telefone, $email, $naturalidade, $tempo, $ocupacao, $remuneracao, $outras_rendas, $cadunico, $nis, $bolsa_familia, $bpc, $escolaridade, $imovel, $comodos, $aluguel, $risco, $deficiencia, $observ){
-        $sql = $this->pdo->prepare("INSERT INTO principal (nome, sexo, est_civil, dt_nasc, cpf, rg, endereco, bairro, zona, telefone, email, naturalidade, tempo, ocupacao, remuneracao, outras_rendas, cadunico, nis, bolsa_familia, bpc, escolaridade, imovel, comodos, aluguel, risco, deficiencia, observ) VALUES (:nome, :sexo, :est_civil, :dt_nasc, :cpf, :rg, :endereco, :bairro, :zona, :telefone, :email, :naturalidade, :tempo, :ocupacao, :remuneracao, :outras_rendas, :cadunico, :nis, :bolsa_familia, :bpc, :escolaridade, :imovel, :comodos, :aluguel, :risco, :deficiencia, :observ)");
+        $sql = $this->pdo->prepare("INSERT INTO principal (nome, sexo, est_civil, dt_nasc, cpf, rg, endereco, bairro, zona, telefone, email, naturalidade, tempo, ocupacao, remuneracao, outras_rendas, cadunico, nis, bolsa_familia, bpc, escolaridade, imovel, comodos, aluguel, risco, deficiencia, observ, insercao) VALUES (:nome, :sexo, :est_civil, :dt_nasc, :cpf, :rg, :endereco, :bairro, :zona, :telefone, :email, :naturalidade, :tempo, :ocupacao, :remuneracao, :outras_rendas, :cadunico, :nis, :bolsa_familia, :bpc, :escolaridade, :imovel, :comodos, :aluguel, :risco, :deficiencia, :observ, now())");
         $sql ->bindValue(":nome", utf8_decode($nome));
         $sql ->bindValue(":sexo", utf8_decode($sexo));
         $sql ->bindValue(":est_civil", utf8_decode($est_civil));
-        $sql ->bindValue(":dt_nasc", utf8_decode($dt_nasc));
+        $sql ->bindValue(":dt_nasc", date('Y-m-d', strtotime($dt_nasc)));
         $sql ->bindValue(":cpf", utf8_decode($cpf));
         $sql ->bindValue(":rg", utf8_decode($rg));
         $sql ->bindValue(":endereco", utf8_decode($endereco)); 
@@ -50,11 +50,11 @@ class Principal
                 naturalidade = :naturalidade, tempo = :tempo, remuneracao = :remuneracao, outras_rendas = :outras_rendas, cadunico = :cadunico, nis = :nis, 
                 bolsa_familia = :bolsa_familia, bpc = :bpc, escolaridade = :escolaridade, 
                 imovel = :imovel, comodos = :comodos, aluguel = :aluguel, risco = :risco, 
-                deficiencia = :deficiencia, observ = :observ, ocupacao = :ocupacao WHERE id = :id");
+                deficiencia = :deficiencia, observ = :observ, ocupacao = :ocupacao, atualizacao = now() WHERE id = :id");
         $sql ->bindValue(":nome", utf8_decode($nome));
         $sql ->bindValue(":sexo", utf8_decode($sexo));
         $sql ->bindValue(":est_civil", utf8_decode($est_civil));
-        $sql ->bindValue(":dt_nasc", utf8_decode($dt_nasc));
+        $sql ->bindValue(":dt_nasc", date('Y-m-d', strtotime($dt_nasc)));
         $sql ->bindValue(":rg", utf8_decode($rg));
         $sql ->bindValue(":endereco", utf8_decode($endereco));
         $sql ->bindValue(":bairro", utf8_decode($bairro));
@@ -92,6 +92,86 @@ class Principal
         $sql = $this->pdo->prepare("SELECT id, nome, sexo, est_civil, dt_nasc, cpf, rg, endereco, bairro, zona, telefone, email, naturalidade, tempo, ocupacao, remuneracao, outras_rendas, cadunico, nis, bolsa_familia, bpc, escolaridade, imovel, comodos, aluguel, risco, deficiencia From principal");
         $sql ->execute();
         return $sql->fetchAll();
+        }
+
+        public function listaAllPrincipalPage($p, $qntpg){
+        $sql = $this->pdo->prepare("SELECT id, nome, cpf From principal ORDER BY id desc LIMIT $p, $qntpg");
+        $sql ->execute();
+        return $sql->fetchAll();
+        }
+        public function countPrincipal(){
+        $sql = $this->pdo->prepare("SELECT count(id) as total FROM principal");
+        $sql->execute();
+        return $sql->fetch();
+        }
+
+        public function listaFiltro($nome, $est_civil, $dt_nasc, $dt_nasc_final, $cpf, $rg) 
+        {       
+                $filtrostring = array();
+                if (!empty($nome)) {
+                        $filtrostring[] = ' nome LIKE :nome';
+                }
+
+                if (!empty($est_civil)) {
+                        $filtrostring[] = ' est_civil = :est_civil';
+                }
+                
+                if (!empty($dt_nasc) && !empty($dt_nasc_final)) {
+                        $filtrostring[] = ' dt_nasc BETWEEN :dt_nasc AND :dt_nasc_final';
+                }
+
+                if (!empty($cpf)) {
+                        $filtrostring[] = ' cpf = :cpf';
+                }
+
+                if (!empty($rg)) {
+                        $filtrostring[] = ' rg = :rg';
+                }
+
+                if (!empty($nome) || !empty($est_civil) || !empty($dt_nasc) || !empty($cpf) || !empty($rg)) {
+                        $sql = $this->pdo->prepare("SELECT * FROM principal WHERE".implode(' AND ', $filtrostring)); 
+                }else{
+                       $sql = $this->pdo->prepare("SELECT * FROM principal LIMIT 10"); 
+                }
+                
+
+                if (!empty($est_civil)) {
+                        $sql->bindValue(":est_civil", $est_civil);
+                }
+                if (!empty($nome)) {
+                        $sql->bindValue(":nome", "%".$nome."%");
+                }
+                
+                if (!empty($dt_nasc) && !empty($dt_nasc_final)) {
+                        $dt_nasc        = date('Y-m-d', strtotime($dt_nasc));
+                        $dt_nasc_final  = date('Y-m-d', strtotime($dt_nasc_final));
+                        $sql->bindValue(":dt_nasc", $dt_nasc);
+                        $sql->bindValue(":dt_nasc_final", $dt_nasc_final);
+                }
+
+                if (!empty($cpf)) {
+                        $sql->bindValue(":cpf", $cpf);
+                }
+
+                if (!empty($rg)) {
+                        $sql->bindValue(":rg", $rg);
+                }
+
+                $sql->execute();
+                return $sql->fetchAll();
+        }
+
+        function buscaData(){
+                $sql = $this->pdo->prepare("SELECT id, dt_nasc FROM principal WHERE dt_nasc LIKE '%/%'");
+                $sql->execute();
+                return $sql->fetchAll();
+        }
+
+        function converteData($id, $nova_data){
+                $sql = $this->pdo->prepare("UPDATE principal SET dt_nasc = :dt_nasc WHERE id = :id");
+                $sql->bindValue(":dt_nasc", $nova_data);
+                $sql->bindValue(":id", $id);
+                $sql->execute();
         }
 
 }

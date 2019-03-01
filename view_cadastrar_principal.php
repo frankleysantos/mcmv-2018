@@ -49,7 +49,7 @@
 	<div class="row">
 		<div class="col-md">
 			<label>Data Nascimento</label>
-			<input type="text" id="idDt_nasc" placeholder="00/00/0000" name="dt_nasc" class="form-control" onkeypress="dataConta(this);" minlength="10" maxlength="10" required>
+			<input type="date" id="idDt_nasc" placeholder="00/00/0000" name="dt_nasc" class="form-control" required>
 		</div>
 		<div class="col-md">
 			<label>CPF</label>
@@ -169,6 +169,7 @@
 				<option value="Com familiares">Com familiares</option>
 				<option value="Invadido">Invadido</option>
 				<option value="Alugado">Alugado</option>
+				<option value="Próprio">Próprio</option>
 			</select>
 		</div>
 		<div class="col-md">
@@ -199,9 +200,11 @@
 				<option value="">Selecione...</option>
 				<option value="Nenhuma">Nenhuma</option>
 				<option value="Motora (cadeirante)">Motora (cadeirante)</option>
+				<option value="Motora (não cadeirante)">Motora (não cadeirante)</option>
 				<option value="Visual">Visual</option>
 				<option value="Auditiva">Auditiva</option>
 				<option value="Mental">Mental</option>
+				Motora (não cadeirante)
 			</select>
 		</div>
 	</div>

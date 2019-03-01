@@ -9,16 +9,18 @@
         <a class="nav-link" href="index.php"><label class="fas fa-file-alt">Cadastrar</label></a>
       </li>
       <li class="nav-item active">
-        <a class="nav-link" href="consulta_principal.php"><label class="fas fa-file-pdf">Consulta</label></a>
+        <a class="nav-link" href="consulta_principal.php?1"><label class="fas fa-file-pdf">Consulta</label></a>
       </li>
       <li class="nav-item active dropdown">
         <a class="nav-link dropdown-toggle active" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <label class="fas fa-users">Relatórios Excel</label>
+          <label class="fas fa-users">Relatórios</label>
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <a class="dropdown-item fas fa-file-pdf" href="excel_principal.php">Principal</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item fas fa-file-alt" href="excel_dependente.php">Dependentes</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item fas fa-filter" href="filtro.php">Por Filtros</a>
         </div>
       </li>
     </ul>

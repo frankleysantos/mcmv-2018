@@ -22,7 +22,7 @@ if (isset($_POST['cpf']) && !empty($_POST['cpf'])) {
 <table class="table table-hover table-striped">
 	<thead>
 		<tr>
-			<th colspan="4"><?=$info_principal['nome'];?></th>
+			<th colspan="4"><?=$info_principal['nome'];?> - <span class="far fa-calendar">Data Cadastro: <?php $data = $info_principal['insercao']; if($data >= '01/01/2018'): echo date('d/m/Y', strtotime($data)); else: echo "Cadastro Antigo."; endif;?></span></th>
 		</tr>
 	</thead>
 	<tbody>

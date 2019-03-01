@@ -63,7 +63,7 @@ date_default_timezone_set('America/Sao_Paulo');
     </tr>
     <tr>
       <td><b>Outras Rendas:</b> R$<?=$_SESSION['PRINCIPAL']['outras_rendas'];?></td>
-      <td><b>NÍVEL DE ESCOLARIDADE:</b> <?=$_SESSION['PRINCIPAL']['escolaridade'];?></td>
+      <td><b>NÍVEL DE ESCOLARIDADE:</b> <?=utf8_encode($_SESSION['PRINCIPAL']['escolaridade']);?></td>
     </tr>
     <tr>
       <td><b>CadÚnico:</b> 
@@ -94,7 +94,7 @@ date_default_timezone_set('America/Sao_Paulo');
         </td>
     </tr>
     <tr>
-      <td><b>Situação do Imóvel:</b> <?=$_SESSION['PRINCIPAL']['imovel'];?></td>
+      <td><b>Situação do Imóvel:</b> <?=utf8_encode($_SESSION['PRINCIPAL']['imovel']);?></td>
       <td><b>Quantidade de Cômodos:</b> <?=$_SESSION['PRINCIPAL']['comodos'];?></td>
     </tr>
     <tr>
@@ -109,7 +109,7 @@ date_default_timezone_set('America/Sao_Paulo');
       </td>
     </tr>
     <tr>
-      <td colspan="2"><b>Deficiência Encontrada em Membro da Familia:</b> <?=$_SESSION['PRINCIPAL']['deficiencia'];?></td>
+      <td colspan="2"><b>Deficiência Encontrada em Membro da Familia:</b> <?=utf8_encode($_SESSION['PRINCIPAL']['deficiencia']);?></td>
     </tr>
     <tr>
       <td colspan="2">
@@ -119,7 +119,11 @@ date_default_timezone_set('America/Sao_Paulo');
     </tr>
   </tbody>
 </table>
+          <?php if(isset($_SESSION['DEPENDENTE']['contador']) && !empty($_SESSION['DEPENDENTE']['contador'])): ?>
           <?php $contador = $_SESSION['DEPENDENTE']['contador'];?>
+          <?php else: ?>
+          <?php $contador = 0; ?>
+          <?php endif; ?>
           <table class='table table-striped table-bordered'>
             <thead>
               <tr>
@@ -177,6 +181,7 @@ date_default_timezone_set('America/Sao_Paulo');
           <div class="hidden-print">
             <p>
              <a href="#" onclick="window.print()" class="btn btn-warning fas fa-print">Imprimir</a>
+             <a href="index.php" class="btn btn-info fas fa-back">Voltar</a>
            </p>
          </div>
        </div>
