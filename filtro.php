@@ -13,6 +13,7 @@ require "inc/cabecalho.php";
 		 document.getElementById('idOverflow').style.padding= '80px 10px';
 	}
 </script>
+<script type="functions.js"></script>
 <?php  
 require "inc/config.php";
 require "classes/Principal.class.php";
@@ -20,7 +21,7 @@ require "classes/Dependentes.class.php";
 require "classes/Bairros.class.php";
 
 $principal 	= new Principal($pdo);
-
+$count = 0;
 ?>
 <div class="hidden-print">
 <form action="" method="POST" role="form">
@@ -55,7 +56,7 @@ $principal 	= new Principal($pdo);
 		</div>
 		<div class="col-md">
 			<label>CPF</label>
-			<input type="text" name="cpf" class="form-control" placeholder="000.000.000-00">
+			<input type="text" name="cpf" id="idCpf" placeholder="000.000.000-00" name="cpf" class="form-control" maxlength="14" minlength="14" onblur="return verificarCPF(this.value)" onkeypress="formatacpf(this);">
 		</div>
 		<div class="col-md form-group">
 			<label>Identidade</label>
@@ -104,8 +105,8 @@ if (isset($_POST['val_filtro'])) {
 <div style="overflow:auto;height:350px; width:auto" id="idOverflow">
  <table class="table table-hover table-bordered">
 	<thead>
-		<tr align="center">
-			<th colspan="5">Resultado da Busca</th>
+		<tr align="left">
+			<th colspan="25">Resultado da Busca</th>
 		</tr>
 		<tr>
 			<th>Nome</th>
@@ -116,20 +117,46 @@ if (isset($_POST['val_filtro'])) {
 		</tr>
 	</thead>
 	<tbody>
-		<?php foreach ($filtro as $info_filtro): ?>
+		<?php foreach ($filtro as $info_filtro): 
+			$count+=1;
+		?>
 		<tr>
-			<td><?=utf8_encode($info_filtro['nome'])?></td>
-			<td><?=utf8_encode($info_filtro['est_civil'])?></td>
-			<td><?=date('d/m/Y', strtotime($info_filtro['dt_nasc']))?></td>
-			<td><?=$info_filtro['cpf']?></td>
-			<td><?=$info_filtro['rg']?></td>
+			<td><?=$_SESSION['DADOS']['nome'.$count] 		= utf8_encode($info_filtro['nome'])?></td>
+			<td><?=$_SESSION['DADOS']['est_civil'.$count] = utf8_encode($info_filtro['est_civil'])?></td>
+			<td><?=$_SESSION['DADOS']['dt_nasc'.$count] 	= date('d/m/Y', strtotime($info_filtro['dt_nasc']))?></td>
+			<td><?=$_SESSION['DADOS']['cpf'.$count] 		= $info_filtro['cpf']?></td>
+			<td><?=$_SESSION['DADOS']['rg'.$count] = $info_filtro['rg']?></td>
+			<td style="display: none;"><?=$_SESSION['DADOS']['endereco'.$count] = utf8_encode($info_filtro['endereco']);?></td>
+			<td style="display: none;"><?=$_SESSION['DADOS']['bairro'.$count] = utf8_encode($info_filtro['bairro']);?></td>
+			<td style="display: none;"><?=$_SESSION['DADOS']['zona'.$count] = $info_filtro['zona']?></td>
+			<td style="display: none;"><?=$_SESSION['DADOS']['telefone'.$count] = $info_filtro['telefone'];?></td>
+			<td style="display: none;"><?=$_SESSION['DADOS']['email'.$count] = utf8_encode($info_filtro['email']);?></td>
+			<td style="display: none;"><?=$_SESSION['DADOS']['naturalidade'.$count] = utf8_encode($info_filtro['naturalidade']);?></td>
+			<td style="display: none;"><?=$_SESSION['DADOS']['tempo'.$count] = $info_filtro['tempo'];?></td>
+			<td style="display: none;"><?=$_SESSION['DADOS']['ocupacao'.$count] = utf8_encode($info_filtro['ocupacao']);?></td>
+			<td style="display: none;"><?=$_SESSION['DADOS']['remuneracao'.$count] = $info_filtro['remuneracao'];?></td>
+			<td style="display: none;"><?=$_SESSION['DADOS']['outras_rendas'.$count] = $info_filtro['outras_rendas'];?></td>
+			<td style="display: none;"><?=$_SESSION['DADOS']['cadunico'.$count] = $info_filtro['cadunico']?></td>
+			<td style="display: none;"><?=$_SESSION['DADOS']['nis'.$count] = $info_filtro['nis'];?></td>
+			<td style="display: none;"><?=$_SESSION['DADOS']['bolsa_familia'.$count] = $info_filtro['bolsa_familia']?></td>
+			<td style="display: none;"><?=$_SESSION['DADOS']['bpc'.$count] = $info_filtro['bpc']?></td>
+			<td style="display: none;"><?=$_SESSION['DADOS']['escolaridade'.$count] = utf8_encode($info_filtro['escolaridade']);?></td>
+			<td style="display: none;"><?=$_SESSION['DADOS']['imovel'.$count] = utf8_encode($info_filtro['imovel']);?></td>
+			<td style="display: none;"><?=$_SESSION['DADOS']['comodos'.$count] = utf8_encode($info_filtro['comodos']);?></td>
+			<td style="display: none;"><?=$_SESSION['DADOS']['aluguel'.$count] = utf8_encode($info_filtro['aluguel']);?></td>
+			<td style="display: none;"><?=$_SESSION['DADOS']['risco'.$count] = $info_filtro['risco']?></td>
+			<td style="display: none;"><?=$_SESSION['DADOS']['deficiencia'.$count] = utf8_encode($info_filtro['deficiencia']);?></td>
 		</tr>
 		<?php endforeach; ?>
 	</tbody>
 </table>
 </div>
+<?php $_SESSION['DADOS']['count'] = $count; ?>
 <div class="hidden-print container">
     	<div class="row">
+    		<div class="col-md d-flex justify-content-right">
+            <a href="filtro_excel.php" class="btn btn-danger">Gerar Excel</a>
+            </div>
     		<div class="col-md d-flex justify-content-end">
             <a href="#" onclick="desativar(this); window.print();location.reload()" class="btn btn-warning">Imprimir</a>
             </div>

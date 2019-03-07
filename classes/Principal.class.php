@@ -131,7 +131,7 @@ class Principal
                 if (!empty($nome) || !empty($est_civil) || !empty($dt_nasc) || !empty($cpf) || !empty($rg)) {
                         $sql = $this->pdo->prepare("SELECT * FROM principal WHERE".implode(' AND ', $filtrostring)); 
                 }else{
-                       $sql = $this->pdo->prepare("SELECT * FROM principal LIMIT 10"); 
+                       $sql = $this->pdo->prepare("SELECT * FROM principal ORDER BY id DESC LIMIT 10"); 
                 }
                 
 
