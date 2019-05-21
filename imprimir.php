@@ -29,7 +29,7 @@ date_default_timezone_set('America/Sao_Paulo');
       </td>
     </tr>
     <tr>
-      <td><b>Data de Nascimento:</b> <?=$_SESSION['PRINCIPAL']['dt_nasc'];?></td>
+      <td><b>Data de Nascimento:</b> <?= date("d/m/Y", strtotime($_SESSION['PRINCIPAL']['dt_nasc']));?></td>
       <td><b>Estado Civil:</b> <?=$_SESSION['PRINCIPAL']['est_civil'];?></td>
     </tr>
     <tr>

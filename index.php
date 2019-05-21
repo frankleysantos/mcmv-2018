@@ -4,40 +4,50 @@ require "inc/config.php";
 require "classes/Principal.class.php";
 require "classes/Dependentes.class.php";
 require "classes/Bairros.class.php";
+require "classes/TipoCadastro.class.php";
 
-$principal  = new Principal($pdo);
-$dependente = new Dependentes($pdo);
-$class_bairro     = new Bairros($pdo);
+$principal  		= new Principal($pdo);
+$dependente 		= new Dependentes($pdo);
+$class_bairro     	= new Bairros($pdo);
+$tipo_cadastro 		= new TipoCadastro($pdo);
+
+$tipo = $tipo_cadastro->listar();
 
 
 if (isset($_POST['nome']) && !empty($_POST['nome'])) {
-	$nome         = $_POST['nome'];
-	$sexo         = $_POST['sexo'];;
-	$est_civil    = $_POST['est_civil'];
-	$dt_nasc      = $_POST['dt_nasc'];
-	$cpf          = $_POST['cpf'];
-	$rg           = $_POST['rg'];
-	$endereco     = $_POST['endereco']; 
-	$bairro       = $_POST['bairro']; 
-	$zona         = $_POST['zona'];
-	$telefone     = $_POST['telefone'];
-	$email        = $_POST['email'];
-	$naturalidade = $_POST['naturalidade'];
-	$tempo        = $_POST['tempo'];
-	$ocupacao     = $_POST['ocupacao'];
-	$remuneracao  = $_POST['remuneracao'];
-	$outras_rendas= $_POST['outras_rendas'];
-	$cadunico     = $_POST['cadunico'];
-	$nis          = $_POST['nis']; 
-	$bolsa_familia= $_POST['bolsa_familia']; 
-	$bpc          = $_POST['bpc'];
-	$escolaridade = $_POST['escolaridade']; 
-	$imovel       = $_POST['imovel'];
-	$comodos      = $_POST['comodos']; 
-	$aluguel      = $_POST['aluguel'];
-	$risco        = $_POST['risco'];
-	$deficiencia  = $_POST['deficiencia'];
-	$observ       = $_POST['observ'];
+	$nome         	= $_POST['nome'];
+	$sexo         	= $_POST['sexo'];;
+	$est_civil    	= $_POST['est_civil'];
+	$dt_nasc      	= $_POST['dt_nasc'];
+	$cpf          	= $_POST['cpf'];
+	$rg           	= $_POST['rg'];
+	$endereco     	= $_POST['endereco']; 
+	$bairro       	= $_POST['bairro']; 
+	$zona         	= $_POST['zona'];
+	$telefone     	= $_POST['telefone'];
+	$email        	= $_POST['email'];
+	$naturalidade 	= $_POST['naturalidade'];
+	$tempo        	= $_POST['tempo'];
+	$ocupacao     	= $_POST['ocupacao'];
+	$remuneracao  	= $_POST['remuneracao'];
+	$outras_rendas	= $_POST['outras_rendas'];
+	$cadunico     	= $_POST['cadunico'];
+	$nis          	= $_POST['nis']; 
+	$bolsa_familia	= $_POST['bolsa_familia']; 
+	$bpc          	= $_POST['bpc'];
+	$escolaridade 	= $_POST['escolaridade']; 
+	$imovel       	= $_POST['imovel'];
+	$comodos      	= $_POST['comodos']; 
+	$aluguel      	= $_POST['aluguel'];
+	$risco        	= $_POST['risco'];
+	$deficiencia  	= $_POST['deficiencia'];
+	$observ       	= $_POST['observ'];
+	$rede_eletrica	= $_POST['rede_eletrica'];
+	$rede_agua		= $_POST['rede_agua'];
+	$rede_esgoto	= $_POST['rede_esgoto'];
+	$situacao_lote	= $_POST['situacao_lote'];
+	$qnt_imovel		= $_POST['qnt_imovel'];
+	$id_tipo_cadastro= $_POST['tipoformulario']; 
 	$lista_principal = $principal->listaPrincipal($cpf);
 	if (!empty($lista_principal)) {
 		echo "<span class='badge badge-danger form-control'>CPF já cadastrado!</span>";
@@ -45,8 +55,18 @@ if (isset($_POST['nome']) && !empty($_POST['nome'])) {
 		if (isset($_POST['bairro']) && !empty($_POST['bairro'])) {
 			$lista_bairro = $class_bairro ->listaBairroID($bairro);
 			if (count($lista_bairro) < 1) {
-				$principal->inserirPrincipal($nome, $sexo, $est_civil, $dt_nasc, $cpf, $rg, $endereco, $bairro, $zona, $telefone, $email, $naturalidade, $tempo, $ocupacao, $remuneracao, $outras_rendas, $cadunico, $nis, $bolsa_familia, $bpc, $escolaridade, $imovel, $comodos, $aluguel, $risco, $deficiencia, $observ);
+				$principal->inserirPrincipal($nome, $sexo, $est_civil, $dt_nasc, $cpf, $rg, $endereco, $bairro, $zona, $telefone, $email, $naturalidade, $tempo, $ocupacao, $remuneracao, $outras_rendas, $cadunico, $nis, $bolsa_familia, $bpc, $escolaridade, $imovel, $comodos, $aluguel, $risco, $deficiencia, $observ, $rede_eletrica, $rede_agua, $rede_esgoto, $situacao_lote, $qnt_imovel, $id_tipo_cadastro);
 				$id_principal = $pdo->lastInsertId();
+				foreach($_FILES['myfile']['name'] as $ind => $val){
+    				if(!empty($val)){
+        				$verifica = 1;
+    				}else{
+    					$verifica = 0;
+    				}
+	    		}
+	    		if ($verifica == 1) {
+	        		$principal->insertImage($id_principal);
+	    		}
 				if (!empty($_POST['composicaototal'])) {
 					$composicaototal = $_POST['composicaototal'];
 					if($composicaototal>0){
@@ -66,8 +86,18 @@ if (isset($_POST['nome']) && !empty($_POST['nome'])) {
 				}
 				$class_bairro->inserirBairro($bairro);
 			}else{
-				$principal->inserirPrincipal($nome, $sexo, $est_civil, $dt_nasc, $cpf, $rg, $endereco, $bairro, $zona, $telefone, $email, $naturalidade, $tempo, $ocupacao, $remuneracao, $outras_rendas, $cadunico, $nis, $bolsa_familia, $bpc, $escolaridade, $imovel, $comodos, $aluguel, $risco, $deficiencia, $observ);
+				$principal->inserirPrincipal($nome, $sexo, $est_civil, $dt_nasc, $cpf, $rg, $endereco, $bairro, $zona, $telefone, $email, $naturalidade, $tempo, $ocupacao, $remuneracao, $outras_rendas, $cadunico, $nis, $bolsa_familia, $bpc, $escolaridade, $imovel, $comodos, $aluguel, $risco, $deficiencia, $observ, $rede_eletrica, $rede_agua, $rede_esgoto, $situacao_lote, $qnt_imovel, $id_tipo_cadastro);
 				$id_principal = $pdo->lastInsertId();
+				foreach($_FILES['myfile']['name'] as $ind => $val){
+    				if(!empty($val)){
+        				$verifica = 1;
+    				}else{
+    					$verifica = 0;
+    				}
+	    		}
+	    		if ($verifica == 1) {
+	        		$principal->insertImage($id_principal);
+	    		}
 				if (!empty($_POST['composicaototal'])) {
 					$composicaototal = $_POST['composicaototal'];
 					if($composicaototal>0){
@@ -87,8 +117,18 @@ if (isset($_POST['nome']) && !empty($_POST['nome'])) {
 				}
 			}
 		}else{
-			$principal->inserirPrincipal($nome, $sexo, $est_civil, $dt_nasc, $cpf, $rg, $endereco, $bairro, $zona, $telefone, $email, $naturalidade, $tempo, $ocupacao, $remuneracao, $outras_rendas, $cadunico, $nis, $bolsa_familia, $bpc, $escolaridade, $imovel, $comodos, $aluguel, $risco, $deficiencia, $observ);
+			$principal->inserirPrincipal($nome, $sexo, $est_civil, $dt_nasc, $cpf, $rg, $endereco, $bairro, $zona, $telefone, $email, $naturalidade, $tempo, $ocupacao, $remuneracao, $outras_rendas, $cadunico, $nis, $bolsa_familia, $bpc, $escolaridade, $imovel, $comodos, $aluguel, $risco, $deficiencia, $observ, $rede_eletrica, $rede_agua, $rede_esgoto, $situacao_lote, $qnt_imovel, $id_tipo_cadastro);
 			$id_principal = $pdo->lastInsertId();
+			foreach($_FILES['myfile']['name'] as $ind => $val){
+    				if(!empty($val)){
+        				$verifica = 1;
+    				}else{
+    					$verifica = 0;
+    				}
+	    		}
+	    		if ($verifica == 1) {
+	        		$principal->insertImage($id_principal);
+	    		}
 			if (!empty($_POST['composicaototal'])) {
 				$composicaototal = $_POST['composicaototal'];
 				if($composicaototal>0){

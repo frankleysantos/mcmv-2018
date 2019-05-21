@@ -72,13 +72,53 @@ function optionCheck(){
           var x = document.getElementById("idBairro").name = "bairro";
         }
     }
+function optionPPME(){
+        var option = document.getElementById("idPPME").value;
+        //id 2 se refere ao tipo de Cadastro PPME
+        if(option == "2"){
+            document.getElementById("idCampoPPME").style.visibility ="visible";
+            document.getElementById("idFile").style.visibility ="visible";
+            document.getElementById("idRede_eletrica").setAttribute('required', 'required');
+            document.getElementById("idRede_esgoto").setAttribute('required', 'required');
+            document.getElementById("idRede_agua").setAttribute('required', 'required');
+            document.getElementById("idSit_Lote").setAttribute('required', 'required');
+            document.getElementById("idQnt_imovel").setAttribute('required', 'required');
+        }else{
+        	document.getElementById("idCampoPPME").style.visibility ="hidden";
+        	document.getElementById("idFile").style.visibility ="hidden";
+        	document.getElementById("idRede_eletrica").value = "";
+        	document.getElementById("idRede_eletrica").removeAttribute('required', 'required');
+        	document.getElementById("idRede_esgoto").value = "";
+        	document.getElementById("idRede_esgoto").removeAttribute('required', 'required');
+        	document.getElementById("idRede_agua").value = "";
+        	document.getElementById("idRede_agua").removeAttribute('required', 'required');
+        	document.getElementById("idSit_Lote").value = "";
+        	document.getElementById("idSit_Lote").removeAttribute('required', 'required');
+        	document.getElementById("idQnt_imovel").value = "";
+        	document.getElementById("idQnt_imovel").removeAttribute('required', 'required');
+        }
+    }
 
 window.onload = function(){
 somar(1); 
 };
+window.onload = function(){
+optionPPME(1); 
+};
 </script>
 
-<form action="" method="POST" role="form">
+<form action="" method="POST" role="form" enctype="multipart/form-data">
+	<div class="row">
+		<div class="col-md">
+			<label>Tipo de Cadastro</label>
+			<select name="tipoformulario" id="idPPME" class="form-control" required="required" onchange="optionPPME(this); changePPME(this)">
+				<option value="" disabled>Selecione o tipo</option>
+				<?php foreach ($tipo as $info_tipo):?>
+				<option value="<?=$info_tipo['id']?>" <?php if($principal['id_tipo_cadastro'] == $info_tipo['id']) echo "selected"; ?>><?=$info_tipo['tipo']?></option>
+				<?php endforeach; ?>
+			</select>
+		</div>
+	</div>
 	<div class="row">
 		<div class="col-md">
 			<label>Nome</label>
@@ -277,24 +317,67 @@ somar(1);
 			<?php $_SESSION['PRINCIPAL']['deficiencia'] = $principal['deficiencia']?>
 		</div>
 	</div>
+	<div class="row" style="visibility:hidden;" id="idCampoPPME">
+		<div class="col-md">
+			<label>Existe rede de elétrica no logradouro?</label>
+			<select name="rede_eletrica" id="idRede_eletrica" class="form-control">
+				<option value="" selected>Selecione...</option>
+				<option value="0" <?php if($principal['rede_eletrica'] == '0') echo 'selected' ?>>Sim</option>
+				<option value="1" <?php if($principal['rede_eletrica'] == '1') echo 'selected' ?>>Não</option>
+			</select>
+		</div>
+		<div class="col-md">
+			<label>Existe rede de água no logradouro?</label>
+			<select name="rede_agua" id="idRede_agua" class="form-control">
+				<option value="" selected>Selecione...</option>
+				<option value="0" <?php if($principal['rede_agua'] == '0') echo 'selected' ?>>Sim</option>
+				<option value="1" <?php if($principal['rede_agua'] == '1') echo 'selected' ?>>Não</option>
+			</select>
+		</div>
+		<div class="col-md">
+			<label>Existe rede de esgoto no logradouro?</label>
+			<select name="rede_esgoto" id="idRede_esgoto" class="form-control">
+				<option value="" selected>Selecione...</option>
+				<option value="0" <?php if($principal['rede_esgoto'] == '0') echo 'selected' ?>>Sim</option>
+				<option value="1" <?php if($principal['rede_esgoto'] == '1') echo 'selected' ?>>Não</option>
+			</select>
+		</div>
+		<div class="w-100"></div>
+		<div class="col-md">
+			<label>Situação Lote?</label>
+			<select name="situacao_lote" id="idSit_Lote" class="form-control">
+				<option value="" selected>Selecione...</option>
+				<option value="0" <?php if($principal['situacao_lote'] == '0') echo 'selected' ?>>Casa Construída</option>
+				<option value="1" <?php if($principal['situacao_lote'] == '1') echo 'selected' ?>>Lote Vago</option>
+			</select>
+		</div>
+		<div class="col-md">
+			<label>Quantidade de imóveis no mesmo terreno?</label>
+			<input type="number" name="qnt_imovel" class="form-control" id="idQnt_imovel" value="<?=$principal['qnt_imovel']?>">
+		</div>
+	</div>
 	<div class="row">
 		<div class="col-md">
 			<label>Observação</label>
-			<textarea name="observ" id="inputObserv" class="form-control" rows="3"><?=$_SESSION['PRINCIPAL']['observ'] = $principal['observ']?></textarea>
+			<textarea name="observ" id="inputObserv" class="form-control" rows="3"><?=$_SESSION['PRINCIPAL']['observ'] = utf8_encode($principal['observ'])?></textarea>
 		</div>
 	</div>
 	<?php include "view_consultar_dependentes.php"; ?>
+	<div class="form-group" style="visibility:hidden;" id="idFile">
+	<h4>Faça o upload dos Arquivos</h4>
+		<input type="file" class="form-control" name="myfile[]" multiple accept="image/png, image/jpeg">
+	</div>
     <input type="hidden" name="id" id="id" value="<?=$principal['id']?>">
 	<div class="row" style="padding-top: 30px;">
-		<div class="col-md">
+		<div class="col-md d-flex justify-content-start">
 			<a href="imprimir.php" class="btn btn-warning">Imprimir</a>
 		</div>
-		<div class="col-md" align="right">
+		<div class="col-md d-flex justify-content-end">
 		   <button type="submit" class="btn btn-primary">Atualizar</button>
 		</div>
 	</div>
 </form>
-
+<?php include "view_imagem_principal.php"; ?>
 <?php 
 if (isset($_POST['id']) && !empty($_POST['id'])) {
 
@@ -328,17 +411,56 @@ $class_bairro     = new Bairros($pdo);
 	$risco        = $_POST['risco'];
 	$deficiencia  = $_POST['deficiencia'];
 	$observ       = $_POST['observ'];
+	$rede_eletrica	= $_POST['rede_eletrica'];
+	$rede_agua		= $_POST['rede_agua'];
+	$rede_esgoto	= $_POST['rede_esgoto'];
+	$situacao_lote	= $_POST['situacao_lote'];
+	$qnt_imovel		= $_POST['qnt_imovel'];
+	$id_tipo_cadastro= $_POST['tipoformulario']; 
     
     if (isset($_POST['bairro']) && !empty($_POST['bairro'])) {
     	$lista_bairro = $class_bairro ->listaBairroID($bairro);
     	if (count($lista_bairro) < 1) {
-	        $princ->updatePrincipal($id, $nome, $sexo, $est_civil, $dt_nasc, $rg, $endereco, $bairro, $zona, $telefone, $email, $naturalidade, $tempo, $ocupacao, $remuneracao, $outras_rendas, $cadunico, $nis, $bolsa_familia, $bpc, $escolaridade, $imovel, $comodos, $aluguel, $risco, $deficiencia, $observ);
+	        $princ->updatePrincipal($id, $nome, $sexo, $est_civil, $dt_nasc, $rg, $endereco, $bairro, $zona, $telefone, $email, $naturalidade, $tempo, $ocupacao, $remuneracao, $outras_rendas, $cadunico, $nis, $bolsa_familia, $bpc, $escolaridade, $imovel, $comodos, $aluguel, $risco, $deficiencia, $observ, $rede_eletrica, $rede_agua, $rede_esgoto, $situacao_lote, $qnt_imovel, $id_tipo_cadastro);
 	        $class_bairro->inserirBairro($bairro);
+	        foreach($_FILES['myfile']['name'] as $ind => $val){
+    		if(!empty($val)){
+        		$verifica = 1;
+    		}else{
+    			$verifica = 0;
+    		}
+	    	}
+	    	if ($verifica == 1) {
+	    		$id_principal = $id;
+	        	$principal->insertImage($id_principal);
+	    	}	
 	    }else{
-	    	$princ->updatePrincipal($id, $nome, $sexo, $est_civil, $dt_nasc, $rg, $endereco, $bairro, $zona, $telefone, $email, $naturalidade, $tempo, $ocupacao, $remuneracao, $outras_rendas, $cadunico, $nis, $bolsa_familia, $bpc, $escolaridade, $imovel, $comodos, $aluguel, $risco, $deficiencia, $observ);
+	    	$princ->updatePrincipal($id, $nome, $sexo, $est_civil, $dt_nasc, $rg, $endereco, $bairro, $zona, $telefone, $email, $naturalidade, $tempo, $ocupacao, $remuneracao, $outras_rendas, $cadunico, $nis, $bolsa_familia, $bpc, $escolaridade, $imovel, $comodos, $aluguel, $risco, $deficiencia, $observ, $rede_eletrica, $rede_agua, $rede_esgoto, $situacao_lote, $qnt_imovel, $id_tipo_cadastro);
+	    	foreach($_FILES['myfile']['name'] as $ind => $val){
+    		if(!empty($val)){
+        		$verifica = 1;
+    		}else{
+    			$verifica = 0;
+    		}
+	    	}
+	    	if ($verifica == 1) {
+	    		$id_principal = $id;
+	        	$principal->insertImage($id_principal);
+	    	}	
 	    }
 	}else{
-		    $princ->updatePrincipal($id, $nome, $sexo, $est_civil, $dt_nasc, $rg, $endereco, $bairro, $zona, $telefone, $email, $naturalidade, $tempo, $ocupacao, $remuneracao, $outras_rendas, $cadunico, $nis, $bolsa_familia, $bpc, $escolaridade, $imovel, $comodos, $aluguel, $risco, $deficiencia, $observ);
+		    $princ->updatePrincipal($id, $nome, $sexo, $est_civil, $dt_nasc, $rg, $endereco, $bairro, $zona, $telefone, $email, $naturalidade, $tempo, $ocupacao, $remuneracao, $outras_rendas, $cadunico, $nis, $bolsa_familia, $bpc, $escolaridade, $imovel, $comodos, $aluguel, $risco, $deficiencia, $observ, $rede_eletrica, $rede_agua, $rede_esgoto, $situacao_lote, $qnt_imovel, $id_tipo_cadastro);
+		    foreach($_FILES['myfile']['name'] as $ind => $val){
+    		if(!empty($val)){
+        		$verifica = 1;
+    		}else{
+    			$verifica = 0;
+    		}
+	    	}
+	    	if ($verifica == 1) {
+	    		$id_principal = $id;
+	        	$principal->insertImage($id_principal);
+	    	}
 	}
 
 	if (!empty($_POST['composicaototal'])) {
@@ -359,6 +481,6 @@ $class_bairro     = new Bairros($pdo);
 			}
 		}
 	}
-    echo "<meta HTTP-EQUIV='refresh' CONTENT='0;URL=consulta_principal.php'>";
+    header("Location: consulta_principal.php?cpf=".$_SESSION['PRINCIPAL']['cpf']);
 }
  ?>

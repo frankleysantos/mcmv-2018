@@ -18,8 +18,46 @@
           var x = document.getElementById("nameBairro").name = "";
         }
     }
+
+    function optionPPME(){
+        var option = document.getElementById("idPPME").value;
+        //id 2 se refere ao tipo de Cadastro PPME
+        if(option == "2"){
+            document.getElementById("idCampoPPME").style.visibility ="visible";
+            document.getElementById("idFile").style.visibility ="visible";
+            document.getElementById("idRede_eletrica").setAttribute('required', 'required');
+            document.getElementById("idRede_esgoto").setAttribute('required', 'required');
+            document.getElementById("idRede_agua").setAttribute('required', 'required');
+            document.getElementById("idSit_Lote").setAttribute('required', 'required');
+            document.getElementById("idQnt_imovel").setAttribute('required', 'required');
+        }else{
+        	document.getElementById("idCampoPPME").style.visibility ="hidden";
+        	document.getElementById("idFile").style.visibility ="hidden";
+        	document.getElementById("idRede_eletrica").value = "";
+        	document.getElementById("idRede_eletrica").removeAttribute('required', 'required');
+        	document.getElementById("idRede_esgoto").value = "";
+        	document.getElementById("idRede_esgoto").removeAttribute('required', 'required');
+        	document.getElementById("idRede_agua").value = "";
+        	document.getElementById("idRede_agua").removeAttribute('required', 'required');
+        	document.getElementById("idSit_Lote").value = "";
+        	document.getElementById("idSit_Lote").removeAttribute('required', 'required');
+        	document.getElementById("idQnt_imovel").value = "";
+        	document.getElementById("idQnt_imovel").removeAttribute('required', 'required');
+        }
+    }
 </script>
-<form action="" method="POST" role="form">
+<form action="" method="POST" role="form" enctype="multipart/form-data">
+	<div class="row">
+		<div class="col-md">
+			<label>Tipo de Cadastro</label>
+			<select name="tipoformulario" id="idPPME" class="form-control" required="required" onchange="optionPPME(this); changePPME(this)" required>
+				<option value="" disabled selected>Selecione o tipo</option>
+				<?php foreach ($tipo as $info_tipo):?>
+				<option value="<?=$info_tipo['id']?>"><?=$info_tipo['tipo']?></option>
+				<?php endforeach; ?>
+			</select>
+		</div>
+	</div>
 	<div class="row">
 		<div class="col-md">
 			<label>Nome</label>
@@ -208,6 +246,46 @@
 			</select>
 		</div>
 	</div>
+	
+	<div class="row" style="visibility:hidden;" id="idCampoPPME">
+		<div class="col-md">
+			<label>Existe rede de elétrica no logradouro?</label>
+			<select name="rede_eletrica" id="idRede_eletrica" class="form-control">
+				<option value="" selected>Selecione...</option>
+				<option value="0">Sim</option>
+				<option value="1">Não</option>
+			</select>
+		</div>
+		<div class="col-md">
+			<label>Existe rede de água no logradouro?</label>
+			<select name="rede_agua" id="idRede_agua" class="form-control">
+				<option value="" selected>Selecione...</option>
+				<option value="0">Sim</option>
+				<option value="1">Não</option>
+			</select>
+		</div>
+		<div class="col-md">
+			<label>Existe rede de esgoto no logradouro?</label>
+			<select name="rede_esgoto" id="idRede_esgoto" class="form-control">
+				<option value="" selected>Selecione...</option>
+				<option value="0">Sim</option>
+				<option value="1">Não</option>
+			</select>
+		</div>
+		<div class="w-100"></div>
+		<div class="col-md">
+			<label>Situação Lote?</label>
+			<select name="situacao_lote" id="idSit_Lote" class="form-control">
+				<option value="" selected>Selecione...</option>
+				<option value="0">Casa Construída</option>
+				<option value="1">Lote Vago</option>
+			</select>
+		</div>
+		<div class="col-md">
+			<label>Quantidade de imóveis no mesmo terreno?</label>
+			<input type="number" name="qnt_imovel" class="form-control" id="idQnt_imovel">
+		</div>
+	</div>
 	<div class="row">
 		<div class="col-md">
 			<label>Observação</label>
@@ -215,8 +293,11 @@
 		</div>
 	</div>
 	<?php include "view_cadastrar_dependentes.php"; ?>
-	<br>
+	<div class="form-group" style="visibility:hidden;" id="idFile">
+		<h4>Faça o upload dos Arquivos</h4>
+		<input type="file" class="form-control" name="myfile[]" multiple accept="image/png, image/jpeg">
+	</div>
 	<div class="row" style="padding-top: 30px;">
-		<div class="col-md"><button type="submit" class="btn btn-primary">Cadastrar</button></div>
+		<div class="col-md d-flex justify-content-end"><button type="submit" class="btn btn-primary">Cadastrar</button></div>
 	</div>
 </form>

@@ -10,7 +10,7 @@ $dependente = new Dependentes($pdo);
 $class_bairro     = new Bairros($pdo);
 ?>
 <h4 align="center">Prefeitura Municipal de Teófilo Otoni</h4>
-<h4 align="center">Sistema Minha Casa Minha Vida</h4>
+<h4 align="center">Sistema de Gestão de Recursos Sociais.</h4>
 <?php
 if (isset($_POST['cpf']) && !empty($_POST['cpf'])) {
 	$cpf = $_POST['cpf'];
@@ -40,6 +40,23 @@ if (isset($_POST['cpf']) && !empty($_POST['cpf'])) {
 			<td>Nenhum dependente Cadastrado!</td>
 		</tr>
 		<?php endif;  ?>
+	</tbody>
+</table>
+<?php
+$principal_id = $info_principal['id']; 
+$sql = $principal->listaImagem($principal_id);
+?>
+Documentos Cadastrados:
+<table class="table table-striped table-hover">
+	<tbody>
+<?php foreach ($sql as $foto): ?>
+	<tr>
+		<td>
+			<a href="viewimagens.php?id=<?=$foto['id']?>"><img src="data:image/png;image/jpeg;base64,<?= base64_encode($foto["imageData"]) ?>" class="img-responsive img-fluid img-thumbnail" style="width: 50px; height: 50px;"/><br></a>
+		</td>
+		<td><?=$foto['name']?></td>
+	</tr>
+<?php endforeach; ?>
 	</tbody>
 </table>
 <?php

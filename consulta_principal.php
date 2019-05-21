@@ -4,10 +4,14 @@ require "inc/config.php";
 require "classes/Principal.class.php";
 require "classes/Dependentes.class.php";
 require "classes/Bairros.class.php";
+require "classes/TipoCadastro.class.php";
 
 $principal  = new Principal($pdo);
 $dependente = new Dependentes($pdo);
 $class_bairro     = new Bairros($pdo);
+$tipo_cadastro 		= new TipoCadastro($pdo);
+
+$tipo = $tipo_cadastro->listar();
 
 
 if (!isset($_POST['cpf']) && !isset($_GET['cpf'])):?>
@@ -46,7 +50,7 @@ if (!isset($_POST['cpf']) && !isset($_GET['cpf'])):?>
 	</div>
 	<?php endif ?>
 	<h4 align="center">Prefeitura Municipal de Teófilo Otoni</h4>
-	<h4 align="center">Sistema Minha Casa Minha Vida</h4>
+	<h4 align="center">Sistema de Gestão de Recursos Sociais.</h4>
 	<form action="info_cadastrado.php" method="POST">
   		<div class="form-row align-items-center">
     		<div class="col-auto">
@@ -64,7 +68,9 @@ if (!isset($_POST['cpf']) && !isset($_GET['cpf'])):?>
   		</div>
 	</form>
 	<table class="table table-hover table-striped">
-		<?php $total = $principal->countPrincipal(); 
+		<?php 
+		$tcadastros = $principal->listaQntProgramas();
+		$total = $principal->countPrincipal(); 
 		$total_cad = $total['total'];
         $paginas = $total_cad / 10;
  
@@ -75,7 +81,7 @@ if (!isset($_POST['cpf']) && !isset($_GET['cpf'])):?>
  		}
  			$p = ($pg-1) * $qntpg;
 		?>
-		<legend align="center">Pessoas Cadastradas:<?=$total_cad?></legend>
+		<legend align="center">Cadastrados MCMV:<?=$tcadastros['tmcmv']?>  -  Cadastrados PPME:<?=$tcadastros['tppme']?></legend>
 		<thead>
 			<tr>
 				<th>Nome</th>
@@ -148,11 +154,14 @@ if (isset($_POST['cpf']) && !empty($_POST['cpf']) || isset($_GET['cpf']) && !emp
 	if (isset($_POST['cpf'])) {
 		$cpf = $_POST['cpf'];
 	}
-	if(isset($_GET['cpf'])){
-		$id = $_GET['id'];
-		$dependente->excluirDependentes($id);
+	if(isset($_GET['cpf']) ){
+		if (isset($_GET['id'])) {
+			$id = $_GET['id'];
+			$dependente->excluirDependentes($id);
+			echo "<span class='badge badge-danger form-control'>Dependente excluido!</span>";
+		}
+		
 		$cpf = $_GET['cpf'];
-		echo "<span class='badge badge-danger form-control'>Dependente excluido!</span>";
 	}
 	
 	$principal = $principal ->listaPrincipal($cpf);

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<?php 
+<?php
+ob_start();  
 session_start();
 ?>
 <html class="no-js" lang="pt">
@@ -18,7 +19,7 @@ session_start();
         <link href="resources/css/solid.css" rel="stylesheet">
         <link href="resources/css/all.css" rel="stylesheet">
         <script src="modernizr.js"></script>
-        <script src="http://cdn.jsdelivr.net/webshim/1.12.4/polyfiller.js"></script>
+        <!--<script src="http://cdn.jsdelivr.net/webshim/1.12.4/polyfiller.js"></script>-->
 		<script>
   		webshims.setOptions('waitReady', false);
   		webshims.setOptions('forms-ext', {types: 'date'});

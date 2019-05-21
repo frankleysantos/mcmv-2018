@@ -36,6 +36,11 @@ header("Pragma: no-cache");
 			<th>Alugel</th>
 			<th>Risco</th>
 			<th>Deficiência</th>
+			<th>Rede Eletrica</th>
+			<th>Rede Água</th>
+			<th>Rede Esgoto</th>
+			<th>Situação Lote</th>
+			<th>Quantidade de Imóveis no Lote</th>
 		</tr>
 	</thead>
 	<tbody>	
@@ -66,6 +71,11 @@ header("Pragma: no-cache");
 		<td><?=$_SESSION['DADOS']['aluguel'.$i]?></td>
 		<td><?php if($_SESSION['DADOS']['risco'.$i]== '0'): echo "Sim"; else: echo "Não"; endif?></td>
 		<td><?=$_SESSION['DADOS']['deficiencia'.$i]?></td>
+		<td><?php if($_SESSION['DADOS']['rede_eletrica'.$i]== '0'): echo "Sim"; else: echo "Não"; endif?></td>
+		<td><?php if($_SESSION['DADOS']['rede_agua'.$i]== '0'): echo "Sim"; else: echo "Não"; endif?></td>
+		<td><?php if($_SESSION['DADOS']['rede_esgoto'.$i]== '0'): echo "Sim"; else: echo "Não"; endif?></td>
+		<td><?php if($_SESSION['DADOS']['situacao_lote'.$i]== '0'): echo "Casa Construída"; else: echo "Lote Vago"; endif?></td>
+		<td><?=$_SESSION['DADOS']['qnt_imovel'.$i]?></td>
 	</tr>
 	<?php endfor;?>
 	</tbody>
